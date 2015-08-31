@@ -1,4 +1,4 @@
-package Data
+package data
 
 
 type Element int

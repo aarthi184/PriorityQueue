@@ -2,8 +2,8 @@ package main
 
 import (
     "fmt"
-    . "BinomialHeap"
-    . "PriorityQueue/Data"
+    . "binomialheap"
+    . "priorityqueue/data"
 )
 
 func main() {

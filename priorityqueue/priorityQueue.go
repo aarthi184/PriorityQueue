@@ -1,7 +1,7 @@
-package PriorityQueue
+package priorityqueue
 
 import (
-    . "PriorityQueue/Data"
+    . "priorityqueue/data"
 )
 
 

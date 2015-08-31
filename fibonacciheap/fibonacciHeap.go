@@ -1,7 +1,7 @@
-package FibonacciHeap
+package fibonacciheap
 
 import (
-    . "PriorityQueue/Data"
+    . "priorityqueue/data"
     "fmt"
 )
 

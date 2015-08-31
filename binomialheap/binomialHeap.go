@@ -1,7 +1,7 @@
-package BinomialHeap
+package binomialheap
 
 import (
-    . "PriorityQueue/Data"
+    . "priorityqueue/data"
     "fmt"
 )
 

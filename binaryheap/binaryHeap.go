@@ -1,8 +1,8 @@
-package BinaryHeap
+package binaryheap
 
 import (
     "fmt"
-    . "PriorityQueue/Data"
+    . "priorityqueue/data"
 )
 
 //type Element int

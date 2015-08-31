@@ -1,26 +1,26 @@
-package PQ_Creator
+package creator
 
 import (
-    . "PriorityQueue"
-    . "PriorityQueue/Data"
-    "BinaryHeap"
-    "BinomialHeap"
-    "FibonacciHeap"
+    . "priorityqueue"
+    . "priorityqueue/data"
+    "binaryheap"
+    "binomialheap"
+    "fibonacciheap"
 )
 
 
 func CreatePQFromBinaryHeap() PriorityQueue {
-    h := BinaryHeap.MakeHeap()
+    h := binaryheap.MakeHeap()
     return h
 }
 
 func CreatePQFromBinomialHeap() PriorityQueue {
-    h := BinomialHeap.MakeHeap()
+    h := binomialheap.MakeHeap()
     return h
 }
 
 func CreatePQFromFibonacciHeap() PriorityQueue {
-    h := FibonacciHeap.MakeHeap()
+    h := fibonacciheap.MakeHeap()
     return h
 }
 

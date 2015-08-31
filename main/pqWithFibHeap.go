@@ -2,8 +2,8 @@ package main
 
 import (
      "fmt"
-     . "PriorityQueue"
-     . "PQ_Creator"
+     . "priorityqueue"
+     . "creator"
 )
 
 func main () {

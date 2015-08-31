@@ -3,10 +3,10 @@ package test_pq
 import (
     "fmt"
     "testing"
-    . "PriorityQueue"
-    . "PQ_Creator"
+    . "priorityqueue"
+    . "creator"
     . "time"
-    . "PriorityQueue/Data"
+    . "priorityqueue/data"
 )
 
 
