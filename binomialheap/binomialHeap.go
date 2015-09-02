@@ -243,7 +243,11 @@ func Union(b *BinomialHeap, b2 *BinomialHeap) *BinomialHeap {
     var x, nextX, nextNextX, prevX *BinomialHeap
     prevX = nil
     x = b.rightSibling
-    nextX = x.rightSibling
+    if x != nil {
+        nextX = x.rightSibling
+    } else {
+        nextX = nil
+    }
     nextNextX = nil
     for nextX != nil {
         if (nextX.rightSibling != nil) {

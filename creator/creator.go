@@ -25,8 +25,13 @@ func CreatePQFromFibonacciHeap() PriorityQueue {
 }
 
 
-func CreatePQElements(elements []Element) PriorityQueue {
-    h := CreatePQFromBinaryHeap()
+func CreatePQElements(elements []Element, impl string) PriorityQueue {
+    var h PriorityQueue
+    if impl == "binomialheap" {
+        h = CreatePQFromBinomialHeap()
+    } else{
+        h = CreatePQFromBinaryHeap()
+    }
     for i:=0;i<len(elements);i++ {
         h.Insert(elements[i])
     }
