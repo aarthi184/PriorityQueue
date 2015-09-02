@@ -60,6 +60,8 @@ func (fh *FibonacciHeap) addToRootList(node *fHeapNode) {
     // Inserting the node into the rootlist
     node.left = fh.min.left
 //    fmt.Println("In insert node.l", node.left)
+//    fmt.Println("In insert node.r", node.right)
+//    fmt.Println("In insert node.key", node.key)
     node.right = fh.min
     fh.min.left = node
     if node.left != nil {
@@ -71,46 +73,59 @@ func (fh *FibonacciHeap) addToRootList(node *fHeapNode) {
     }
 }
 
-func (fh *FibonacciHeap) Delete() {
-
+func (fh *FibonacciHeap) Delete(key Element) bool {
+    status := fh.DecreaseKey(key, -1)
+    if status == false {
+        return false
+    }
+    fh.Display()
+    e := fh.ExtractMin()
+    if (e == -1) {
+        return true
+    }
+    return false
 }
 
 func (fh FibonacciHeap) FindKey(e Element) *fHeapNode {
-    if fh.min != nil {
-        return fh.min.findNode(e)
+    if fh.min == nil {
+        return nil
+    }
+    next := fh.min
+    for next != nil {
+        if next.key == e {
+             return next
+        }
+        fNode := next.findNode(e)
+        if fNode != nil {
+            return fNode
+        }
+        next = next.left
+    }
+    next = fh.min.right
+    for next != nil {
+        if next.key == e {
+             return next
+        }
+        fNode := next.findNode(e)
+        if fNode != nil {
+            return fNode
+        }
+        next = next.right
     }
     return nil
 }
 
 func (fNode *fHeapNode) findNode(e Element) *fHeapNode {
-    if fNode.key == e {
-        return fNode
-    }
-    next := fNode.left
-    for next != nil {
-        if next.key == e {
-            return next
+    nextChild := fNode.child
+    for nextChild != nil {
+        if nextChild.key == e {
+             return nextChild
         }
-        if next.child != nil {
-            node := next.child.findNode(e)
-            if node != nil {
-                 return node
-            }
+        node := nextChild.findNode(e)
+        if node != nil {
+             return node
         }
-        next = next.left
-    }
-    next = fNode.right
-    for next != nil {
-        if next.key == e {
-            return next
-        }
-        if next.child != nil {
-            node := next.child.findNode(e)
-            if node != nil {
-                 return node
-            }
-        }
-        next = next.right
+        nextChild = nextChild.right
     }
     return nil
 }
@@ -118,6 +133,7 @@ func (fNode *fHeapNode) findNode(e Element) *fHeapNode {
 func (fNode *fHeapNode) cutOffNode() {
     if fNode.parent != nil {
         fNode.parent.child = fNode.right
+        fNode.parent.order--
         if fNode.right != nil {
             fNode.right.left = nil
         }
@@ -155,6 +171,7 @@ func (fh *FibonacciHeap) DecreaseKey(oldKey Element, newKey Element) bool {
                 parent.marked = false
             }
             fNode = parent
+            parent = fNode.parent
         }
     }
     return true
@@ -217,74 +234,123 @@ func (fh *FibonacciHeap) ExtractMin() Element {
     }
     nextChild = minNode.child
     for nextChild != nil {
-        fh.addToRootList(nextChild)
-        fh.updateMin(nextChild)
+        child := nextChild
         nextChild = nextChild.right
+        fh.addToRootList(child)
+        fh.updateMin(child)
     }
     if single == true {
         return minNode.key
     }
+    fmt.Println("In extractmin displaying")
+    fh.Display()
     fh.mergeTrees()
+    fh.n--
     return minNode.key
 }
 
 func (fh *FibonacciHeap) mergeTrees() {
-    var array []*fHeapNode
+    var orderArr []*fHeapNode
     var parent, child *fHeapNode
     next := fh.min
     right := fh.min.right
     for next != nil {
-        if next.order >= len(array) {
-            count := next.order + 1 - len(array)
+        leftNode := next.left
+        if next.order >= len(orderArr) {
+            count := next.order + 1 - len(orderArr)
             for i:=0;i<count;i++ {
-                array = append(array,nil)
+                orderArr = append(orderArr,nil)
             }
         }
-        if array[next.order] == nil {
-            array[next.order] = next
-            next = next.left
-        } else {
-            if array[next.order].key < next.key {
+        for orderArr[next.order] != nil {
+            oldOrder := next.order
+            if orderArr[next.order].key < next.key {
                 child = next
-                parent = array[next.order]
-                next = next.left
+                parent = orderArr[next.order]
                 makeChild(parent, child)
             } else {
                 parent = next
-                child = array[next.order]
-                next = next.left
+                child = orderArr[next.order]
                 makeChild(parent, child)
-           }
+            }
+            orderArr[oldOrder] = nil
+            next = parent
+            if next.order >= len(orderArr) {
+                orderArr = append(orderArr,nil)
+            }
         }
+        orderArr[next.order] = next
+        next = leftNode
     }
     next = right
     for next != nil {
-        if next.order >= len(array) {
-            count := next.order + 1 - len(array)
+        rightNode := next.right
+        if next.order >= len(orderArr) {
+            count := next.order + 1 - len(orderArr)
             for i:=0;i<count;i++ {
-                array = append(array,nil)
+                orderArr = append(orderArr,nil)
             }
         }
-        if array[next.order] == nil {
-            array[next.order] = next
-            next = next.right
-        } else {
-            if array[next.order].key < next.key {
+        for orderArr[next.order] != nil {
+            oldOrder := next.order
+            if orderArr[next.order].key < next.key {
                 child = next
-                parent = array[next.order]
-                next = next.right
+                parent = orderArr[next.order]
                 makeChild(parent, child)
             } else {
                 parent = next
-                child = array[next.order]
-                next = next.right
+                child = orderArr[next.order]
                 makeChild(parent, child)
-           }
+            }
+            orderArr[oldOrder] = nil
+            next = parent
+            if next.order >= len(orderArr) {
+                orderArr = append(orderArr,nil)
+            }
+        }
+        orderArr[next.order] = next
+        next = rightNode
+    }
+    i := 0
+//    for k:=0;k<len(orderArr);k++ {
+//        fmt.Println("orderArr[", k, "] :", orderArr[k])
+//        if orderArr[k] != nil {
+//        fmt.Println("orderArr[", k, "].key :", orderArr[k].key)
+//        }
+//    }
+    for orderArr[i] == nil {
+        i++
+    }
+    orderArr[i].left = nil
+    for i=0;i<len(orderArr); {
+        j := i + 1
+        if orderArr[i] != nil {
+            for j< len(orderArr) && orderArr[j] == nil {
+                j++
+            }
+                if j >= len(orderArr) {
+                    orderArr[i].right = nil
+                    break
+                }
+            orderArr[i].right = orderArr[j]
+            orderArr[j].left = orderArr[i]
+            orderArr[j].right = nil
+ //       fmt.Println("orderArr[", i, "].key :", orderArr[i].key)
+ //       fmt.Println("orderArr[", i, "].right.key :", orderArr[i].right.key)
+ //       fmt.Println("orderArr[", j, "].key :", orderArr[j].key)
+ //       fmt.Println("orderArr[", j, "].left.key :", orderArr[j].left.key)
+//            orderArr[j] = nil
+            orderArr[i] = nil
+            i = j
+        } else {
+             i++
         }
     }
-//        fmt.Println(array)
     fh.traverseAndUpdateMin()
 }
+
+
+
 
 // min pointer will not be updated here
 func makeChild(toBeParent *fHeapNode, child *fHeapNode) {
@@ -342,8 +408,7 @@ func makeChild(toBeParent *fHeapNode, child *fHeapNode) {
 
 
 func (fh *FibonacciHeap) DeleteMin() Element {
-
-    return -1
+    return fh.ExtractMin()
 }
 
 func (fh FibonacciHeap) Display() {
@@ -354,25 +419,25 @@ func (fh FibonacciHeap) Display() {
     fmt.Println("Displaying the heap:")
     next := fh.min
     for next != nil {
-        fmt.Println("Key:", next.key, "Marked:", next.marked)
-        fh.min.displayKeys()
+        fmt.Println("Key:", next.key, "Marked:", next.marked, "Order:", next.order)
+        next.displayChildren()
         next = next.left
     }
     next = fh.min.right
     fmt.Println("Right")
     for next != nil {
-        fmt.Println("Key:", next.key, "Marked:", next.marked)
-        fh.min.displayKeys()
+        fmt.Println("Key:", next.key, "Marked:", next.marked, "Order:", next.order)
+        next.displayChildren()
         next = next.right
     }
 }
 
-func (fNode fHeapNode) displayKeys() {
+func (fNode fHeapNode) displayChildren() {
     nextChild := fNode.child
     for nextChild != nil {
         fmt.Println("Children of ", fNode.key, "::")
-        fmt.Println("Key:", nextChild.key, "Marked:", nextChild.marked)
-        nextChild.displayKeys()
+        fmt.Println("Key:", nextChild.key, "Marked:", nextChild.marked, "Order:", nextChild.order)
+        nextChild.displayChildren()
         fmt.Println("Back to parent");
         nextChild = nextChild.right
     }
@@ -390,8 +455,66 @@ func (fh FibonacciHeap) GetSize() int {
 }
 
 func (fh FibonacciHeap) GetIterator() DataIter {
-    return func () (Element,bool) {
-         return -1,false
+    if fh.min == nil {
+        return nil
     }
+    cur := fh.min
+    dirRight := false
+    return func () (e Element, hasNext bool) {
+        e = cur.key
+        if cur.child != nil {
+            cur = cur.child
+            return e, true
+        }
+        if cur.parent == nil {
+            cur, hasNext = fh.moveInRootList(cur,&dirRight)
+            return e, hasNext
+
+        }
+        if cur.right != nil && cur.parent != nil {
+            cur = cur.right
+            return e, false
+        }
+        if cur.right == nil && cur.parent != nil {
+            cur = cur.parent
+            for cur.right == nil && cur.parent != nil {
+                cur = cur.parent
+            }
+            if cur.parent == nil {
+                cur, hasNext = fh.moveInRootList(cur,&dirRight)
+                return e, hasNext
+            }
+            if cur.right != nil {
+                 cur = cur.right
+                 return e, true
+            }
+        }
+    return -1, false
+    }
+    return nil
 }
 
+func (fh FibonacciHeap) moveInRootList(node *fHeapNode, dirRight *bool) (cur *fHeapNode, hasNext bool) {
+    cur = node
+    if *dirRight == false {
+        if cur.left != nil {
+           cur = cur.left
+            return cur, true
+        } else if fh.min.right != nil {
+            cur = fh.min.right
+            *dirRight = true
+            return cur, true
+        } else {
+            cur = nil
+            return cur, false
+        }
+    } else {
+        if cur.right != nil {
+            cur = cur.right
+            return cur, true
+        } else {
+            cur = nil
+            return cur, false
+        }
+    }
+}
