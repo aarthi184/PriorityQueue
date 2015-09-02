@@ -59,9 +59,6 @@ func (fh *FibonacciHeap) addToRootList(node *fHeapNode) {
     }
     // Inserting the node into the rootlist
     node.left = fh.min.left
-//    fmt.Println("In insert node.l", node.left)
-//    fmt.Println("In insert node.r", node.right)
-//    fmt.Println("In insert node.key", node.key)
     node.right = fh.min
     fh.min.left = node
     if node.left != nil {
@@ -312,12 +309,6 @@ func (fh *FibonacciHeap) mergeTrees() {
         next = rightNode
     }
     i := 0
-//    for k:=0;k<len(orderArr);k++ {
-//        fmt.Println("orderArr[", k, "] :", orderArr[k])
-//        if orderArr[k] != nil {
-//        fmt.Println("orderArr[", k, "].key :", orderArr[k].key)
-//        }
-//    }
     for orderArr[i] == nil {
         i++
     }
@@ -335,11 +326,6 @@ func (fh *FibonacciHeap) mergeTrees() {
             orderArr[i].right = orderArr[j]
             orderArr[j].left = orderArr[i]
             orderArr[j].right = nil
- //       fmt.Println("orderArr[", i, "].key :", orderArr[i].key)
- //       fmt.Println("orderArr[", i, "].right.key :", orderArr[i].right.key)
- //       fmt.Println("orderArr[", j, "].key :", orderArr[j].key)
- //       fmt.Println("orderArr[", j, "].left.key :", orderArr[j].left.key)
-//            orderArr[j] = nil
             orderArr[i] = nil
             i = j
         } else {
@@ -370,42 +356,6 @@ func makeChild(toBeParent *fHeapNode, child *fHeapNode) {
     toBeParent.child = child
     toBeParent.order++
 }
-
-
-//func (fh *FibonacciHeap) mergeTrees() {
-//    if fNode.key == e {
-//        return fNode
-//    }
-//    next := fNode.left
-//    for next != nil {
-//        if next.key == e {
-//            return next
-//        }
-//        if next.child != nil {
-//            node := next.child.findNode(e)
-//            if node != nil {
-//                 return node
-//            }
-//        }
-//        next = next.left
-//    }
-//    next = fNode.right
-//    for next != nil {
-//        if next.key == e {
-//            return next
-//        }
-//        if next.child != nil {
-//            node := next.child.findNode(e)
-//            if node != nil {
-//                 return node
-//            }
-//        }
-//        next = next.right
-//    }
-//    return nil
-
-//}
-
 
 func (fh *FibonacciHeap) DeleteMin() Element {
     return fh.ExtractMin()
