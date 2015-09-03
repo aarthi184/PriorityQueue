@@ -239,8 +239,6 @@ func (fh *FibonacciHeap) ExtractMin() Element {
     if single == true {
         return minNode.key
     }
-    fmt.Println("In extractmin displaying")
-    fh.Display()
     fh.mergeTrees()
     fh.n--
     return minNode.key
