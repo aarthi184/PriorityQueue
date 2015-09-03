@@ -5,16 +5,11 @@ import (
     . "priorityqueue/data"
 )
 
-//type Element int
-
-//type DataIter func() (Element, bool)
-
 type Heap struct {
     array []Element
     size int
 }
 
-//Need to change bool to hasnext
 func (h Heap) GetIterator() DataIter {
     if h.size <= 0 {
         return nil
