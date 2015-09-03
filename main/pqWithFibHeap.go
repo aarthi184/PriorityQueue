@@ -25,7 +25,7 @@ func main () {
      pq.Display()
      pq.Insert(2)
      pq.Display()
-//     fmt.Println(pq.DeleteMin())
+     fmt.Println(pq.DeleteMin())
      pq.Display()
      pq.Insert(9)
      pq.Display()
@@ -41,6 +41,6 @@ func main () {
      pq.Display()
      pq.Insert(25)
      pq.Display()
-     pq.DecreaseKey(13,0)
+     fmt.Println(pq.DeleteMin())
      pq.Display()
 }
