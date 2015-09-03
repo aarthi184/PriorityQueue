@@ -149,6 +149,20 @@ func BenchmarkInsert6(b *testing.B) {
     }
 }
 
+func BenchmarkInsert1M(b *testing.B) {
+    pq := CreatePQElements([]Element{},"binaryheap")
+    for i:=1;i <= 100; i++ {
+         pq.Insert(Element(i))
+    }
+    for i:=102;i <= 10000000; i++ {
+         pq.Insert(Element(i))
+    }
+//    pq.Display()
+    for n:=0;n<b.N;n++ {
+        pq.Insert(101)
+    }
+}
+
 func BenchmarkIsEmpty1(b *testing.B) {
     pq := CreatePQElements([]Element{},"binaryheap")
     for n:=0;n<b.N;n++ {
@@ -170,8 +184,11 @@ func BenchmarkFindMin(b *testing.B) {
     }
 }
 
-func TestDeleteMinBenchmark(t *testing.T) {
-    pq := CreatePQElements([]Element{2,3,4,5,6,7},"binaryheap")
+func TestDeleteMinBenchmark100(t *testing.T) {
+    pq := CreatePQElements([]Element{},"binaryheap")
+    for i:=1;i <= 100; i++ {
+         pq.Insert(Element(i))
+    }
     var ct Time
     var d,avg Duration
     for n:=0;n<10000000;n++ {
@@ -181,6 +198,23 @@ func TestDeleteMinBenchmark(t *testing.T) {
         avg += d;
         pq.Insert(x)
     }
-    fmt.Println("BenchmarkDeleteMin\t10000000\t",avg/10000000,"/op")
+    fmt.Println("BenchmarkDeleteMin100\t10000000\t",avg/10000000,"/op")
+}
+
+func TestDeleteMinBenchmark1M(t *testing.T) {
+    pq := CreatePQElements([]Element{},"binaryheap")
+    for i:=1;i <= 10000000; i++ {
+         pq.Insert(Element(i))
+    }
+    var ct Time
+    var d,avg Duration
+    for n:=0;n<10000000;n++ {
+        ct = Now()
+        x := pq.DeleteMin()
+        d = Since(ct)
+        avg += d;
+        pq.Insert(x)
+    }
+    fmt.Println("BenchmarkDeleteMin1M\t10000000\t",avg/10000000,"/op")
 }
 
